@@ -49,7 +49,9 @@ app.post('/refresh-tokens', async (req, res) => {
   if (!req.oidc.isAuthenticated()) {
     return res.redirect('/');
   }
-  await req.oidc.getAccessToken({ refresh: true });
+  if (req.oidc.accessToken) {
+    await req.oidc.accessToken.refresh();
+  }
   res.redirect('/');
 });
 
@@ -58,7 +60,7 @@ app.get('/', (req, res) => {
   if (!req.oidc.isAuthenticated()) {
     return res.type('html').send(`
       <a href="/signup">Signup</a><br>
-      <a href="/login">Log in</a>
+      <a href="/app_login">Log in</a>
     `);
   }
 
